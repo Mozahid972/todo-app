@@ -1,23 +1,22 @@
 const mongoose = require("mongoose");
-
-const todoSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-    maxLength: 50,
-  },
-  body: {
-    type: String,
-    required: true,
-    maxLength: 50,
-  },
-  user: [
-    {
-      type: mongoose.Types.ObjectId,
-      ref: "User",
+const listSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
     },
-  ],
-},
-{timestamps:true});
+    body: {
+      type: String,
+      required: true,
+    },
+    user: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+  },
+  { timestamps: true }
+);
 
-module.exports = mongoose.model("list",todoSchema);
+module.exports = mongoose.model("List", listSchema);

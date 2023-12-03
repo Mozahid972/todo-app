@@ -23,13 +23,10 @@ router.post("/addTask", async (req, res) => {
 router.put("/updateTask/:id", async (req, res) => {
   try {
     const { title, body } = req.body;
-    const list = await List.findByIdAndUpdate(req.params.id, {
-      title,
-      body,
-    });
+    const list = await List.findByIdAndUpdate(req.params.id, { title, body });
     list.save().then(() => res.status(200).json({ message: "Task Updated" }));
   } catch (error) {
-    console.error(err);
+    console.log(error);
   }
 });
 
@@ -40,32 +37,27 @@ router.delete("/deleteTask/:id", async (req, res) => {
     const existingUser = await User.findByIdAndUpdate(id, {
       $pull: { list: req.params.id },
     });
-
     if (existingUser) {
       await List.findByIdAndDelete(req.params.id).then(() =>
-        res.status(200).json({
-          message: "Delete Task",
-        })
+        res.status(200).json({ message: "Task Deleted" })
       );
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({
-      success: false,
-      data: "Internal Server Error",
-      message: err.message,
-    });
   }
 });
 
 //getTask
-router.get("/getTask/:id", async (req, res) => {
-  const list = await List.find({ user: req.params.id }).sort({ createdAt: -1 });
-
-  if (list.length !== 0) {
-    res.status(200).json({ list: list });
-  } else {
-    res.status(200).json({ message: "No Task" });
+router.get("/getTasks/:id", async (req, res) => {
+  try {
+    const list = await List.find({ user: req.params.id }).sort({
+      createdAt: -1,
+    });
+    if (list.length !== 0) {
+      res.status(200).json({ list: list });
+    }
+  } catch (error) {
+    console.log(error);
   }
 });
 
